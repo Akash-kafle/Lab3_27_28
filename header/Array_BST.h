@@ -1,24 +1,33 @@
 #include "binary_tree.h"
-struct Node{
+struct Node
+{
     int data;
-    int depth;
 };
 
 class ArrayBinarySearchTree : public BinarySearchTree
 {
-    Node *data_user = nullptr;
+    Node **data_user = nullptr;
     int nodeCount{};
     int size{};
-    bool resize();
+    int depth{};
+    bool resize(int temp = 0);
     bool isFull();
+
 public:
-
-~ArrayBinarySearchTree(){
-    delete []data_user;
-}
-bool isEmpty();
-bool addBST(int data);
-bool removeBST(int key);
-int  searchBST(int key);
+    ArrayBinarySearchTree()
+    {
+        resize();
+    }
+    ~ArrayBinarySearchTree()
+    {
+        for (int i = 0; i < size; i++)
+        {
+            delete data_user[i];
+        }
+        delete[] data_user;
+    }
+    bool isEmpty();
+    void addBST(int data);
+    void removeBST(int key);
+    int searchBST(int key);
 };
-
