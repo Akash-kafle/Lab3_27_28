@@ -1,17 +1,20 @@
+#pragma once
 #include "binary_tree.h"
-struct Node
+struct AraryNode
 {
     int data;
 };
 
 class ArrayBinarySearchTree : public BinarySearchTree
 {
-    Node **data_user = nullptr;
+    AraryNode **data_user = nullptr;
     int nodeCount{};
     int size{};
     int depth{};
-    bool resize(int temp = 0);
+    bool resize();
+    bool resize(int newSize);
     bool isFull();
+    void heapify(int index);
 
 public:
     ArrayBinarySearchTree()
@@ -25,6 +28,7 @@ public:
             delete data_user[i];
         }
         delete[] data_user;
+        data_user = nullptr;
     }
     bool isEmpty();
     void addBST(int data);

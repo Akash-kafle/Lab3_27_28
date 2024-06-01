@@ -1,14 +1,17 @@
 #include "../header/Array_BST.h"
 #include <math.h>
 
+// Check if the tree is empty
 bool ArrayBinarySearchTree::isEmpty()
 {
-    if (data_user == nullptr)
+    if (data_user == nullptr || nodeCount == 0)
     {
         return true;
     }
     return false;
 }
+
+// Check if the tree is full
 bool ArrayBinarySearchTree::isFull()
 {
     if (nodeCount == size)
@@ -18,6 +21,7 @@ bool ArrayBinarySearchTree::isFull()
     return false;
 }
 
+// Add the given element to the tree
 void ArrayBinarySearchTree::addBST(int data)
 {
     if (data_user == nullptr || isFull())
@@ -30,7 +34,7 @@ void ArrayBinarySearchTree::addBST(int data)
     nodeCount++;
     if (nodeCount == 0)
     {
-        data_user[0] = new Node;
+        data_user[0] = new AraryNode;
         data_user[0]->data = data;
         depth = 0;
         return;
@@ -48,8 +52,9 @@ void ArrayBinarySearchTree::addBST(int data)
         }
         if (data_user[left] == nullptr)
         {
-            data_user[left] = new Node;
+            data_user[left] = new AraryNode;
             data_user[left]->data = data;
+            std::cout << "Added to " << left << std::endl;
             return;
         }
         if (right >= size)
@@ -58,126 +63,166 @@ void ArrayBinarySearchTree::addBST(int data)
         }
         if (data_user[right] == nullptr)
         {
-            data_user[right] = new Node;
+            data_user[right] = new AraryNode;
             data_user[right]->data = data;
+            std::cout << "Added to " << right << std::endl;
             return;
         }
         i++;
     }
 }
 
+// Remove the given element from the tree
 void ArrayBinarySearchTree::removeBST(int key)
 {
-    int i{1};
-    Node *Node_to_delete = nullptr;
-    while (i <= size)
+    if (isEmpty())
     {
-        int left = 2 * i;
-        int right = left + 1;
-        if (left >= size || right >= size)
+        throw "Empty tree cannot be removed";
+    }
+    int i;
+    // Find the index of the node with the given key
+    for (i = 0; i < size; i++)
+    {
+        if (data_user[i] && data_user[i]->data == key)
         {
             break;
         }
-        if (data_user[left]->data == key)
-        {
-            Node_to_delete = data_user[left];
-            int right_most = 2 * left + 1;
-            while (2 * right_most + 1 < size && data_user[2 * right_most + 1] != nullptr)
-            {
-                right_most = 2 * right_most + 1;
-            }
-
-            if (data_user[right_most] != nullptr)
-            {
-                Node_to_delete->data = data_user[right_most]->data;
-                delete data_user[right_most];
-                data_user[right_most] = nullptr;
-            }
-            else
-            {
-                Node_to_delete->data = data_user[left]->data;
-                delete data_user[left];
-                data_user[left] = nullptr;
-            }
-        }
-        if (data_user[right]->data == key)
-        {
-            Node_to_delete = data_user[right];
-            int right_most = 2 * right;
-            while (2 * right_most + 1 < size && data_user[2 * right_most + 1] != nullptr)
-            {
-                right_most = 2 * right_most + 1;
-            }
-
-            if (data_user[right_most] != nullptr)
-            {
-                Node_to_delete->data = data_user[right_most]->data;
-                delete data_user[right_most];
-                data_user[right_most] = nullptr;
-            }
-            else
-            {
-                Node_to_delete->data = data_user[right]->data;
-                delete data_user[right];
-                data_user[right] = nullptr;
-            }
-            i++;
-        }
     }
 
-    if (Node_to_delete == nullptr)
+    if (i < size && data_user[i])
     {
-        std::cout << "The selected element does not exists in the binary tree" << std::endl;
+        // Replace the node to be removed with the last node
+        auto temp = data_user[size - 1];
+        data_user[size - 1] = data_user[i];
+        data_user[i] = temp;
+
+        // Delete the last node
+        delete data_user[size - 1];
+        data_user[size - 1] = nullptr;
+        nodeCount--;
+
+        // Re-balance the tree
+        heapify(i);
     }
+    throw "Key not found";
 }
 
+// Search for the given element in the tree
 int ArrayBinarySearchTree::searchBST(int key)
 {
-    return 0;
+    if (isEmpty())
+    {
+        throw "Empty tree cannot be searched";
+    }
+    int left = 0;
+    int right = size - 1;
+    // Binary search using iterative approach
+    while (left <= right)
+    {
+        int mid = left + (right - left) / 2;
+
+        if (data_user[mid] != nullptr && data_user[mid]->data == key) // Key found
+        {
+            return mid;
+        }
+        else if (data_user[mid] != nullptr && data_user[mid]->data < key) // Search in the right subtree
+        {
+            left = mid + 1;
+        }
+        else // Search in the left subtree
+        {
+            right = mid - 1;
+        }
+    }
+
+    return -1; // Key not found
 }
-bool ArrayBinarySearchTree::resize(int temp_size = 0)
+
+// Helper function to resize the array
+bool ArrayBinarySearchTree::resize()
 {
-    Node *temp = nullptr;
+    return resize(0);
+}
+
+// main function to resize the array
+bool ArrayBinarySearchTree::resize(int temp_size)
+{
+    AraryNode *temp = nullptr; // Temporary pointer to store the data
     try
     {
         if (data_user == nullptr)
         {
-            data_user = new Node *[10];
-            size = 10;
+            data_user = new AraryNode *[10]; // Initial size of the array
+            size = 10;                       // Storing size of the array
             for (int i = 0; i < 10; i++)
             {
-                data_user[i] = nullptr;
+                data_user[i] = nullptr; // Initialize all the pointers to nullptr
             }
             return true;
         }
-        if (temp_size == 0)
+        if (temp_size == 0) // If the size is not specified
         {
-            temp_size = pow(2, depth) == 1 ? 1 : pow(2, depth + 1) + 1;
-            depth++;
+            temp_size = pow(2, depth) == 1 ? 1 : pow(2, depth + 1) + 1; // Calculate the size of the array
+            depth++;                                                    // Increase the depth
+            data_user = new AraryNode *[temp_size];                     // Create a new array with the new size
+            for (int i = 0; i < temp_size; i++)
+            {
+                data_user[i] = nullptr; // Initialize all the pointers to nullptr
+            }
+            size = temp_size;
+            return true;
         }
-        temp = new Node[temp_size * 2];
+        temp = new AraryNode[temp_size * 2];
         int i;
         for (i = 0; i < size; i++)
         {
-            temp[i] = *data_user[i];
+            temp[i] = *data_user[i]; // Copy the data to the temporary pointer array
         }
         for (i = 0; i < size; i++)
         {
-            delete data_user[i];
+            delete data_user[i]; // Delete the data from the original array
         }
         delete[] data_user;
 
-        data_user = new Node *[temp_size * 2];
-        for (int i = 0; i < temp_size; i++)
+        data_user = new AraryNode *[temp_size * 2];
+        for (int i = 0; i < temp_size; i++) // re save the data
         {
             data_user[i] = &temp[i];
         }
         size *= 2;
+        delete[] temp;
         return true;
     }
     catch (std::exception &e)
     {
         std::cout << e.what() << std::endl;
         return false;
+    }
+}
+
+void ArrayBinarySearchTree::heapify(int index)
+{
+
+    // Implement heapify to maintain the binary search tree property
+    int left = 2 * index + 1;
+    int right = 2 * index + 2;
+    int smallest = index;
+
+    if (left < size && data_user[left] && data_user[smallest] && data_user[left]->data < data_user[smallest]->data)
+    {
+        smallest = left;
+    }
+
+    if (right < size && data_user[right] && data_user[smallest] && data_user[right]->data < data_user[smallest]->data)
+    {
+        smallest = right;
+    }
+
+    if (smallest != index)
+    {
+        auto temp = data_user[index];
+        data_user[index] = data_user[smallest];
+        data_user[smallest] = temp;
+        heapify(smallest);
     }
 }
