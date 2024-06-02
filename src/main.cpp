@@ -81,4 +81,63 @@ void Main_for_ArrayBst()
 
 void Main_for_LinkedBst()
 {
+    Linked_BST bst;
+    std::cout << "Checking if this is empty: " << std::boolalpha << bst.isEmpty() << std::endl;
+    bst.addBST(0);
+    bst.addBST(1);
+    bst.addBST(2);
+    bst.addBST(3);
+
+    std::cout << "Checking if this is empty: " << std::boolalpha << bst.isEmpty() << std::endl;
+    std::cout << "Searching for 2: " << bst.searchBST(2) << std::endl;
+    std::cout << "Searching for 3: " << bst.searchBST(3) << std::endl;
+    std::cout << "Searching for 4: " << bst.searchBST(4) << std::endl;
+    try
+    {
+        bst.removeBST(2);
+    }
+    catch (const char *e)
+
+    {
+        std::cerr << e << '\n';
+    }
+    try
+    {
+        std::cout << "Searching for 2(after removing): " << bst.searchBST(2) << std::endl;
+        bst.~Linked_BST();
+    }
+    catch (const char *e)
+    {
+        std::cerr << e << '\n';
+    }
+
+    try
+    {
+
+        std::cout << "Checking if this is empty(after emptying): " << std::boolalpha << bst.isEmpty() << std::endl;
+    }
+    catch (const char *e)
+    {
+        std::cerr << e << '\n';
+    }
+    std::cout << "trying to search after clearing the tree: " << std::endl;
+    try
+    {
+        bst.searchBST(2);
+    }
+    catch (const char *e)
+    {
+        std::cerr << e << '\n';
+    }
+    std::cout << "trying to remove after clearing the tree: " << std::endl;
+    try
+    {
+        bst.removeBST(2);
+    }
+    catch (const char *e)
+    {
+        std::cerr << e << '\n';
+    }
+    std::cout << "End of Linked BST" << std::endl;
+    return;
 }
