@@ -3,11 +3,13 @@
 #include "../header/Linked_BST.h"
 
 void Main_for_ArrayBst();
+void Main_for_LinkedBst();
 
 int main()
 {
-    Main_for_ArrayBst();
+
     // Main_for_LinkedBst();
+    Main_for_ArrayBst();
     return 0;
 }
 
@@ -15,15 +17,18 @@ void Main_for_ArrayBst()
 {
     ArrayBinarySearchTree bst;
     std::cout << "Checking if this is empty: " << std::boolalpha << bst.isEmpty() << std::endl;
-    bst.addBST(0);
-    bst.addBST(1);
-    bst.addBST(2);
-    bst.addBST(3);
+    std::cout << "Enter the number of elements you want to add: ";
+    int n;
+    std::cin >> n;
+    for (int i = 0; i < n; i++)
+    {
+        bst.addBST(i);
+    }
 
     std::cout << "Checking if this is empty: " << std::boolalpha << bst.isEmpty() << std::endl;
     std::cout << "Searching for 2: " << bst.searchBST(2) << std::endl;
-    std::cout << "Searching for 3: " << bst.searchBST(3) << std::endl;
-    std::cout << "Searching for 4: " << bst.searchBST(4) << std::endl;
+    std::cout << "Searching for 3: " << bst.searchBST(3 * n) << std::endl;
+    std::cout << "Searching for 4: " << bst.searchBST(100 % n) << std::endl;
     try
     {
         bst.removeBST(2);
