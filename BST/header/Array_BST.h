@@ -1,13 +1,13 @@
 #pragma once
 #include "binary_tree.h"
-struct AraryNode
+struct ArrayNode
 {
     int data;
 };
 
 class ArrayBinarySearchTree : public BinarySearchTree
 {
-    AraryNode **data_user = nullptr;
+    ArrayNode **data_user = nullptr;
     int nodeCount{};
     int size{};
     int depth{};
